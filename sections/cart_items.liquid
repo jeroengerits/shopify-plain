@@ -1,0 +1,68 @@
+<section aria-labelledby='cart-title'>
+  <div>
+    <h1 id='cart-title'>Shopping Cart</h1>
+
+    {% if cart.item_count > 0 %}
+      <form action='/cart' method='post'>
+        <div role='grid' aria-label='Cart items'>
+          {% for item in cart.items %}
+            <article role='gridcell'>
+              <a href='{{ item.url }}'>
+                {% if item.image %}
+                  <img
+                    src='{{ item.image | img_url: 'small' }}'
+                    alt='{{ item.image.alt | escape }}'
+                    width='100'
+                    height='100'
+                    loading='lazy'
+                  >
+                {% endif %}
+                <h3>{{ item.title }}</h3>
+              </a>
+
+              <p>
+                <strong>Price:</strong> <span>{{ item.price | money }}</span>
+              </p>
+              <p>
+                <strong>Quantity:</strong> <span>{{ item.quantity }}</span>
+              </p>
+              <p>
+                <strong>Total:</strong> <span>{{ item.line_price | money }}</span>
+              </p>
+
+              <a href='/cart/change?line={{ forloop.index }}&quantity=0' aria-label='Remove {{ item.title }} from cart'
+                >Remove</a
+              >
+            </article>
+          {% endfor %}
+        </div>
+
+        <div>
+          <p>
+            <strong>Subtotal:</strong> <span>{{ cart.total_price | money }}</span>
+          </p>
+
+          <button type='submit' name='checkout'>Checkout</button>
+          <button type='submit' name='update'>Update Cart</button>
+        </div>
+      </form>
+    {% else %}
+      <div>
+        <p>Your cart is empty.</p>
+        <a href='/collections'>Continue Shopping</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cart Items",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Cart Items"
+    }
+  ]
+}
+{% endschema %}

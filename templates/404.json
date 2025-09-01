@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "page": {
+      "type": "text",
+      "name": "Page",
+      "settings": {
+        "text": "Hello World"
+      }
+    }
+  },
+  "order": ["page"]
+}

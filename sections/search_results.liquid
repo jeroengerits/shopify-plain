@@ -1,0 +1,73 @@
+<section aria-labelledby='search-title'>
+  <div>
+    <h1 id='search-title'>Search Results</h1>
+
+    <form action='/search' method='get' role='search'>
+      <label for='search-results-input'>Search products</label>
+      <input
+        type='search'
+        id='search-results-input'
+        name='q'
+        value='{{ search.terms | escape }}'
+        placeholder='Search...'
+        aria-label='Search products'
+      >
+      <button type='submit' aria-label='Submit search'>Search</button>
+    </form>
+
+    {% if search.performed %}
+      <p>Search results for "{{ search.terms | escape }}"</p>
+
+      {% if search.results_count > 0 %}
+        <p>Found {{ search.results_count }} results</p>
+
+        <div role='grid' aria-label='Search results'>
+          {% for item in search.results %}
+            <article role='gridcell'>
+              {% if item.featured_image %}
+                <img
+                  src='{{ item.featured_image | img_url: 'small' }}'
+                  alt='{{ item.featured_image.alt | escape }}'
+                  width='150'
+                  height='150'
+                  loading='lazy'
+                >
+              {% endif %}
+
+              <h3>
+                <a href='{{ item.url }}'>{{ item.title }}</a>
+              </h3>
+
+              {% if item.price %}
+                <p>
+                  <strong>Price:</strong> <span>{{ item.price | money }}</span>
+                </p>
+              {% endif %}
+
+              {% if item.description %}
+                <p>{{ item.description | strip_html | truncate: 100 }}</p>
+              {% endif %}
+            </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div>
+          <p>No results found for "{{ search.terms | escape }}"</p>
+          <p>Try checking your spelling or using different keywords.</p>
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Search Results",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Search Results"
+    }
+  ]
+}
+{% endschema %}

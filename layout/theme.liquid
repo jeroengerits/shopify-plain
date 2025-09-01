@@ -1,15 +1,8 @@
 <!doctype html>
-<html lang='{{ request.locale.iso_code }}' class='h-full'>
+<html lang='{{ request.locale.iso_code }}'>
   <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <meta name='theme-color' content='#1f2937'>
-
-    <!-- Preload critical resources -->
-    <link rel='preload' href='https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4' as='script'>
-
-    <!-- Favicon and app icons -->
-    <!-- Add favicon.svg and apple-touch-icon.png to your assets folder when ready -->
 
     <title>
       {% if page_title != shop.name %}
@@ -21,30 +14,49 @@
 
     <meta name='description' content='{{ page_description | default: shop.description | escape }}'>
 
-    <!-- Open Graph -->
-    <meta property='og:title' content='{{ page_title | default: shop.name }}'>
-    <meta property='og:description' content='{{ page_description | default: shop.description | escape }}'>
-    <meta property='og:type' content='website'>
-    <meta property='og:url' content='{{ request.origin }}{{ request.path }}'>
-    <meta property='og:site_name' content='{{ shop.name }}'>
-
-    <!-- Twitter Card -->
-    <meta name='twitter:card' content='summary_large_image'>
-    <meta name='twitter:title' content='{{ page_title | default: shop.name }}'>
-    <meta name='twitter:description' content='{{ page_description | default: shop.description | escape }}'>
-
-    {{ content_for_header }}
-
-    <!-- Tailwind CSS -->
     <script src='https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4' defer></script>
+    <style type='text/tailwindcss'>
+      @layer base {
+        a {
+          @apply text-blue-900 transition-all hover:text-black;
+        }
+      }
+    </style>
+    {{ content_for_header }}
   </head>
-  <body class='text-brand-neutral-900  h-full'>
-    {% sections 'header-group' %}
+  <body>
+    {% comment %}
+      <header role="banner">
+        <div>
+          <h1><a href="/">{{ shop.name }}</a></h1>
 
-    <main id='main-content' class='mt-[80px]'>
+          <form action="/search" method="get" role="search">
+            <label for="search-input">Search products</label>
+            <input type="search" id="search-input" name="q" placeholder="Search products..." value="{{ search.terms | escape }}" aria-label="Search products">
+            <button type="submit" aria-label="Submit search">Search</button>
+          </form>
+        </div>
+
+        <nav role="navigation" aria-label="Main navigation">
+          <ul>
+            <li><a href="/" aria-current="page">Home</a></li>
+            <li><a href="/collections">Collections</a></li>
+            <li><a href="/products">Products</a></li>
+            <li><a href="/cart">Cart</a></li>
+          </ul>
+        </nav>
+      </header>
+    {% endcomment %}
+
+    <main role='main' id='main-content'>
       {{ content_for_layout }}
     </main>
 
-    {% sections 'footer-group' %}
+    <footer role='contentinfo'>
+      <p>
+        &copy; {{ 'now' | date: '%Y' }}
+        {{ shop.name }}. All rights reserved.
+      </p>
+    </footer>
   </body>
 </html>

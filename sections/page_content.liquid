@@ -1,0 +1,21 @@
+<section aria-labelledby='page-title'>
+  <div>
+    <h1 id='page-title'>{{ page.title }}</h1>
+
+    <div>
+      {{ page.content }}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Page Content",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Page Content"
+    }
+  ]
+}
+{% endschema %}

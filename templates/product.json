@@ -1,0 +1,10 @@
+{
+  "sections": {
+    "product_info": {
+      "type": "product_info",
+      "name": "Product Information",
+      "settings": {}
+    }
+  },
+  "order": ["product_info"]
+}

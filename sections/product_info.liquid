@@ -1,0 +1,64 @@
+<section aria-labelledby='product-title'>
+  <div>
+    <h1 id='product-title'>{{ product.title }}</h1>
+
+    <div>
+      {% if product.featured_image %}
+        <img
+          src='{{ product.featured_image | img_url: 'medium' }}'
+          alt='{{ product.featured_image.alt | escape }}'
+          width='400'
+          height='400'
+          loading='lazy'
+        >
+      {% endif %}
+    </div>
+
+    <div>
+      <p>
+        <strong>Price:</strong> <span>{{ product.price | money }}</span>
+      </p>
+
+      {% if product.compare_at_price > product.price %}
+        <p>
+          <strong>Compare at:</strong> <span>{{ product.compare_at_price | money }}</span>
+        </p>
+        <p>
+          <strong>Save:</strong> <span>{{ product.compare_at_price | minus: product.price | money }}</span>
+        </p>
+      {% endif %}
+
+      <div>{{ product.description }}</div>
+
+      {% form 'product', product %}
+        <fieldset>
+          <legend>Product Options</legend>
+
+          <label for='product-variant'>Variant:</label>
+          <select id='product-variant' name='id' required>
+            {% for variant in product.variants %}
+              <option value='{{ variant.id }}'>{{ variant.title }} - {{ variant.price | money }}</option>
+            {% endfor %}
+          </select>
+
+          <label for='product-quantity'>Quantity:</label>
+          <input type='number' id='product-quantity' name='quantity' value='1' min='1' required>
+
+          <button type='submit'>Add to Cart</button>
+        </fieldset>
+      {% endform %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Information",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Product Information"
+    }
+  ]
+}
+{% endschema %}

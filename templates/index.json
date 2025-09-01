@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "page": {
+      "type": "text",
+      "name": "Text Section",
+      "settings": {
+        "title": "Welcome to Our Store",
+        "text": "<p>This is a plain Shopify template with no styles. You can customize this content through the theme editor.</p>"
+      }
+    }
+  },
+  "order": ["page"]
+}

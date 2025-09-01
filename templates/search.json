@@ -1,0 +1,10 @@
+{
+  "sections": {
+    "search_results": {
+      "type": "search_results",
+      "name": "Search Results",
+      "settings": {}
+    }
+  },
+  "order": ["search_results"]
+}
