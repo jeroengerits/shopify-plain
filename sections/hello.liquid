@@ -1,0 +1,17 @@
+{% comment %}
+  <div class="min-h-screen py-6">
+    <div class="grid grid-cols-5 gap-4">
+      {%  for product in collections.all.products %}
+            <a href="{{ product.url }}" class="hover:bg-gray-100 rounded-xl p-4">
+              {% render 'product-image',
+                  image: product.featured_image,
+                  alt: product.title,
+                  class: 'hover:bg-gray-100 rounded-xl p-4'
+                %}
+                        </a>
+      {% endfor %}
+    </div>
+  </div>
+{% endcomment %}
+
+<div>Hello</div>

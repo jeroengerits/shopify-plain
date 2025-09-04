@@ -1,0 +1,73 @@
+{% comment %}
+  Image snippet with responsive handling and fallbacks
+
+  Usage:
+  {% render 'image',
+    image: product.featured_image,
+    alt: product.title,
+    size: 'medium',
+    class: 'custom-class',
+    lazy: true
+  %}
+
+  Parameters:
+  - image: Shopify image object
+  - alt: Alt text for accessibility
+  - size: Image size (small, medium, large, xlarge, original)
+  - class: Additional CSS classes
+  - lazy: Enable lazy loading (default: true)
+  - width: Custom width
+  - height: Custom height
+  - placeholder: Custom placeholder text
+{% endcomment %}
+
+{%- liquid
+  assign image_size = size | default: 'medium'
+  assign image_class = class | default: ''
+  assign lazy_loading = lazy | default: true
+  assign image_width = width | default: 400
+  assign image_height = height | default: 400
+  assign placeholder_text = placeholder | default: 'No image available'
+
+  case image_size
+    when 'small'
+      assign image_url = image | img_url: '150x150', crop: 'center'
+    when 'medium'
+      assign image_url = image | img_url: '400x400', crop: 'center'
+    when 'large'
+      assign image_url = image | img_url: '600x600', crop: 'center'
+    when 'xlarge'
+      assign image_url = image | img_url: '800x800', crop: 'center'
+    when 'original'
+      assign image_url = image | img_url: 'original'
+    else
+      assign image_url = image | img_url: image_size
+  endcase
+-%}
+
+{%- if image -%}
+  <img
+    src='{{ image_url }}'
+    alt='{{ alt s| escape }}'
+    width='{{ image_width }}'
+    height='{{ image_height }}'
+    {% if lazy_loading %}
+      loading='lazy'
+    {% endif %}
+    {% if image_class != blank %}
+      class='{{ image_class }}'
+    {% endif %}
+    {% if image.aspect_ratio %}
+      style='aspect-ratio: {{ image.aspect_ratio }};'
+    {% endif %}
+  >
+{%- else -%}
+  <div
+    class='{{ image_class }}'
+    style='width: {{ image_width }}px; height: {{ image_height }}px;'
+    role='img'
+    aria-label='{{ placeholder_text }}'
+  >
+    <span>{{ placeholder_text }}</span>
+  </div>
+{%- endif -%}

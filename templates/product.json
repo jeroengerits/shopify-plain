@@ -1,10 +1,22 @@
 {
   "sections": {
+    "header": {
+      "type": "page_header",
+      "name": "Header",
+      "settings": {}
+    },
+    "page_title": {
+      "type": "page_title",
+      "name": "Page Title",
+      "settings": {
+        "text": "{{ product.title }}"
+      }
+    },
     "product_info": {
       "type": "product_info",
       "name": "Product Information",
       "settings": {}
     }
   },
-  "order": ["product_info"]
+  "order": ["header", "page_title", "product_info"]
 }

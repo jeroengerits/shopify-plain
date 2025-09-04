@@ -1,11 +1,9 @@
 {
   "sections": {
     "page": {
-      "type": "text",
-      "name": "Page",
-      "settings": {
-        "text": "Hello World"
-      }
+      "type": "page_content",
+      "name": "Page Content",
+      "settings": {}
     }
   },
   "order": ["page"]

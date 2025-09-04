@@ -1,0 +1,82 @@
+{% comment %}
+  Responsive image snippet with srcset and modern optimization
+
+  Usage:
+  {% render 'responsive-image',
+    image: product.featured_image,
+    alt: product.title,
+    sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
+    class: 'product-image'
+  %}
+
+  Parameters:
+  - image: Shopify image object
+  - alt: Alt text for accessibility
+  - sizes: CSS sizes attribute for responsive behavior
+  - class: Additional CSS classes
+  - lazy: Enable lazy loading (default: true)
+  - placeholder: Custom placeholder text
+{% endcomment %}
+
+{%- liquid
+  assign image_class = class | default: ''
+  assign lazy_loading = lazy | default: true
+  assign sizes_attr = sizes | default: '100vw'
+  assign placeholder_text = placeholder | default: 'No image available'
+
+  if image
+    assign small_image = image | img_url: '300x300', crop: 'center'
+    assign medium_image = image | img_url: '600x600', crop: 'center'
+    assign large_image = image | img_url: '900x900', crop: 'center'
+    assign original_image = image | img_url: 'original'
+  endif
+-%}
+
+{%- if image -%}
+  <picture>
+    <!-- Small screens -->
+    <source
+      media='(max-width: 480px)'
+      srcset='{{ small_image }} 1x, {{ medium_image }} 2x'
+    >
+
+    <!-- Medium screens -->
+    <source
+      media='(max-width: 768px)'
+      srcset='{{ medium_image }} 1x, {{ large_image }} 2x'
+    >
+
+    <!-- Large screens -->
+    <source
+      media='(min-width: 769px)'
+      srcset='{{ large_image }} 1x, {{ original_image }} 2x'
+    >
+
+    <!-- Fallback image -->
+    <img
+      src='{{ medium_image }}'
+      srcset='{{ small_image }} 300w, {{ medium_image }} 600w, {{ large_image }} 900w, {{ original_image }} 1200w'
+      sizes='{{ sizes_attr }}'
+      alt='{{ alt | escape }}'
+      width='600'
+      height='600'
+      {% if lazy_loading %}
+        loading='lazy'
+      {% endif %}
+      {% if image_class != blank %}
+        class='{{ image_class }}'
+      {% endif %}
+      {% if image.aspect_ratio %}
+        style='aspect-ratio: {{ image.aspect_ratio }};'
+      {% endif %}
+    >
+  </picture>
+{%- else -%}
+  <div
+    class='image-placeholder {{ image_class }}'
+    role='img'
+    aria-label='{{ placeholder_text }}'
+  >
+    <span>{{ placeholder_text }}</span>
+  </div>
+{%- endif -%}

@@ -1,0 +1,23 @@
+<h1 class='mb-6 px-3 text-lg font-light text-neutral-900'>{{ section.settings.text }}</h1>
+
+{% schema %}
+{
+  "name": "Page Title",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Title Text",
+      "default": "Page Title"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page Title",
+      "settings": {
+        "text": "Page Title"
+      }
+    }
+  ]
+}
+{% endschema %}

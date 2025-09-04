@@ -1,0 +1,21 @@
+{%- liquid
+  assign image_class = class | default: ''
+  assign image_url = image | img_url: '400x400', crop: 'center'
+-%}
+
+<div class='{{ image_class }}'>
+  {%- if image -%}
+    <img
+      src='{{ image_url }}'
+      alt='{{ alt | escape }}'
+      width='400'
+      height='400'
+      loading='lazy'
+      class='h-auto w-full object-cover'
+    >
+  {%- else -%}
+    <div class='flex h-96 w-full items-center justify-center rounded-lg bg-gray-200'>
+      <span class='text-sm text-gray-500'>{{ alt | default: 'No image available' }}</span>
+    </div>
+  {%- endif -%}
+</div>

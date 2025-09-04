@@ -1,55 +1,122 @@
-<section aria-labelledby='product-title'>
+<section>
   <div>
-    <h1 id='product-title'>{{ product.title }}</h1>
-
     <div>
-      {% if product.featured_image %}
-        <img
-          src='{{ product.featured_image | img_url: 'medium' }}'
-          alt='{{ product.featured_image.alt | escape }}'
-          width='400'
-          height='400'
-          loading='lazy'
-        >
-      {% endif %}
-    </div>
+      <div>
+        {% if product.featured_image %}
+          <div>
+            <img
+              src='{{ product.featured_image | img_url: 'large' }}'
+              alt='{{ product.featured_image.alt | escape }}'
+              width='600'
+              height='600'
+              loading='lazy'
+            >
+          </div>
+        {% else %}
+          <div>
+            <span>No image available</span>
+          </div>
+        {% endif %}
+      </div>
 
-    <div>
-      <p>
-        <strong>Price:</strong> <span>{{ product.price | money }}</span>
-      </p>
+      <div>
+        <div>
+          <h1>{{ product.title }}</h1>
+          {% if product.vendor %}
+            <p>by {{ product.vendor }}</p>
+          {% endif %}
+        </div>
 
-      {% if product.compare_at_price > product.price %}
-        <p>
-          <strong>Compare at:</strong> <span>{{ product.compare_at_price | money }}</span>
-        </p>
-        <p>
-          <strong>Save:</strong> <span>{{ product.compare_at_price | minus: product.price | money }}</span>
-        </p>
-      {% endif %}
+        <div>
+          <span>{{ product.price | money }}</span>
+          {% if product.compare_at_price > product.price %}
+            <span>{{ product.compare_at_price | money }}</span>
+            <span> Save {{ product.compare_at_price | minus: product.price | money }} </span>
+          {% endif %}
+        </div>
 
-      <div>{{ product.description }}</div>
+        {% if product.description != blank %}
+          <div>{{ product.description }}</div>
+        {% endif %}
 
-      {% form 'product', product %}
-        <fieldset>
-          <legend>Product Options</legend>
+        {% form 'product', product %}
+          <div>
+            {% if product.has_only_default_variant == false %}
+              <div>
+                <h3>Select Options</h3>
+                {% for option in product.options_with_values %}
+                  <div>
+                    <label>
+                      {{ option.name }}
+                    </label>
+                    <div>
+                      {% for value in option.values %}
+                        <input
+                          type='radio'
+                          name='options[{{ option.name | escape }}]'
+                          value='{{ value | escape }}'
+                          id='option-{{ option.name | handleize }}-{{ value | handleize }}'
+                          {% if forloop.first %}
+                            checked
+                          {% endif %}
+                        >
+                        <label
+                          for='option-{{ option.name | handleize }}-{{ value | handleize }}'
+                        >
+                          {{ value }}
+                        </label>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
 
-          <label for='product-variant'>Variant:</label>
-          <select id='product-variant' name='id' required>
-            {% for variant in product.variants %}
-              <option value='{{ variant.id }}'>{{ variant.title }} - {{ variant.price | money }}</option>
-            {% endfor %}
-          </select>
+            <div>
+              <label for='quantity'> Quantity </label>
+              <div>
+                <button type='button' onclick='updateQuantity(-1)'>-</button>
+                <input type='number' id='quantity' name='quantity' value='1' min='1'>
+                <button type='button' onclick='updateQuantity(1)'>+</button>
+              </div>
+            </div>
 
-          <label for='product-quantity'>Quantity:</label>
-          <input type='number' id='product-quantity' name='quantity' value='1' min='1' required>
+            <button type='submit'>Add to Cart</button>
+          </div>
+        {% endform %}
 
-          <button type='submit'>Add to Cart</button>
-        </fieldset>
-      {% endform %}
+        <div>
+          <div>
+            {% if product.available %}
+              <div>
+                <span>In Stock</span>
+              </div>
+            {% else %}
+              <div>
+                <span>Out of Stock</span>
+              </div>
+            {% endif %}
+
+            {% if product.type %}
+              <div>
+                <span>{{ product.type }}</span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
+
+<script>
+  function updateQuantity(change) {
+    const input = document.getElementById('quantity');
+    const currentValue = parseInt(input.value);
+    const newValue = Math.max(1, currentValue + change);
+    input.value = newValue;
+  }
+</script>
 
 {% schema %}
 {

@@ -1,10 +1,22 @@
 {
   "sections": {
+    "header": {
+      "type": "page_header",
+      "name": "Header",
+      "settings": {}
+    },
+    "page_title": {
+      "type": "page_title",
+      "name": "Page Title",
+      "settings": {
+        "text": "{{ collection.title }}"
+      }
+    },
     "collection_products": {
       "type": "collection_products",
       "name": "Collection Products",
       "settings": {}
     }
   },
-  "order": ["collection_products"]
+  "order": ["header", "page_title", "collection_products"]
 }

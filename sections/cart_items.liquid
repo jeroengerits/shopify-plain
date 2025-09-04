@@ -1,59 +1,96 @@
-<section aria-labelledby='cart-title'>
+<section>
   <div>
-    <h1 id='cart-title'>Shopping Cart</h1>
-
     {% if cart.item_count > 0 %}
       <form action='/cart' method='post'>
-        <div role='grid' aria-label='Cart items'>
+        <div>
           {% for item in cart.items %}
-            <article role='gridcell'>
-              <a href='{{ item.url }}'>
-                {% if item.image %}
-                  <img
-                    src='{{ item.image | img_url: 'small' }}'
-                    alt='{{ item.image.alt | escape }}'
-                    width='100'
-                    height='100'
-                    loading='lazy'
-                  >
-                {% endif %}
-                <h3>{{ item.title }}</h3>
-              </a>
+            <article>
+              <div>
+                <a href='{{ item.url }}'>
+                  {% if item.image %}
+                    <img
+                      src='{{ item.image | img_url: 'medium' }}'
+                      alt='{{ item.image.alt | escape }}'
+                      width='80'
+                      height='80'
+                      loading='lazy'
+                    >
+                  {% else %}
+                    <div>
+                      <span>No image</span>
+                    </div>
+                  {% endif %}
+                </a>
+              </div>
 
-              <p>
-                <strong>Price:</strong> <span>{{ item.price | money }}</span>
-              </p>
-              <p>
-                <strong>Quantity:</strong> <span>{{ item.quantity }}</span>
-              </p>
-              <p>
-                <strong>Total:</strong> <span>{{ item.line_price | money }}</span>
-              </p>
+              <div>
+                <h3>
+                  <a href='{{ item.url }}'>
+                    {{ item.title }}
+                  </a>
+                </h3>
 
-              <a href='/cart/change?line={{ forloop.index }}&quantity=0' aria-label='Remove {{ item.title }} from cart'
-                >Remove</a
-              >
+                <div>
+                  <div>
+                    <span>Price:</span>
+                    <span>{{ item.price | money }}</span>
+                  </div>
+                  <div>
+                    <span>Qty:</span>
+                    <span>{{ item.quantity }}</span>
+                  </div>
+                  <div>
+                    <span>Total:</span>
+                    <span>{{ item.line_price | money }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <a
+                  href='/cart/change?line={{ forloop.index }}&quantity=0'
+                  aria-label='Remove {{ item.title }} from cart'
+                >
+                  <span>Remove</span>
+                </a>
+              </div>
             </article>
           {% endfor %}
         </div>
 
         <div>
-          <p>
-            <strong>Subtotal:</strong> <span>{{ cart.total_price | money }}</span>
-          </p>
+          <div>
+            <span>Subtotal</span>
+            <span>{{ cart.total_price | money }}</span>
+          </div>
 
-          <button type='submit' name='checkout'>Checkout</button>
-          <button type='submit' name='update'>Update Cart</button>
+          <div>
+            <button type='submit' name='checkout'>Proceed to Checkout</button>
+            <button type='submit' name='update'>Update Cart</button>
+          </div>
         </div>
       </form>
     {% else %}
       <div>
-        <p>Your cart is empty.</p>
-        <a href='/collections'>Continue Shopping</a>
+        <h2>Your cart is empty</h2>
+        <p>Looks like you haven't added any items to your cart yet.</p>
+        <a href='/collections'> Continue Shopping </a>
       </div>
     {% endif %}
   </div>
 </section>
+
+<script>
+  function updateQuantity(lineIndex, change) {
+    const input = document.getElementById(`counter-input-${lineIndex}`);
+    const currentValue = parseInt(input.value);
+    const newValue = Math.max(1, currentValue + change);
+
+    if (newValue !== currentValue) {
+      window.location.href = `/cart/change?line=${lineIndex}&quantity=${newValue}`;
+    }
+  }
+</script>
 
 {% schema %}
 {

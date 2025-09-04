@@ -2,61 +2,76 @@
 <html lang='{{ request.locale.iso_code }}'>
   <head>
     <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <link rel='canonical' href='{{ canonical_url }}'>
 
     <title>
-      {% if page_title != shop.name %}
-        {{ page_title }} - {{ shop.name }}
-      {% else %}
-        {{ shop.name }}
-      {% endif %}
+      {{ page_title }}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
     </title>
 
-    <meta name='description' content='{{ page_description | default: shop.description | escape }}'>
-
+    {% if page_description %}
+      <meta name='description' content='{{ page_description | escape }}'>
+    {% endif %}
     <script src='https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4' defer></script>
     <style type='text/tailwindcss'>
       @layer base {
-        a {
-          @apply text-blue-900 transition-all hover:text-black;
+        html {
+          scroll-behavior: smooth;
+        }
+        body {
+          font-family:
+            system-ui,
+            -apple-system,
+            BlinkMacSystemFont,
+            'Segoe UI',
+            Roboto,
+            'Helvetica Neue',
+            Arial,
+            sans-serif;
+          line-height: 1.6;
+        }
+      }
+
+      @layer components {
+        .button {
+          @apply inline-flex items-center justify-center rounded-lg bg-blue-600 px-6 py-3 font-medium text-white shadow-sm transition-all duration-200 hover:bg-blue-700 hover:shadow-md;
+        }
+        .button-secondary {
+          @apply inline-flex items-center justify-center rounded-lg border border-gray-300 bg-gray-100 px-6 py-3 font-medium text-gray-900 transition-all duration-200 hover:bg-gray-200;
+        }
+        .link {
+          @apply text-blue-600 transition-colors duration-200 hover:text-blue-700 hover:underline;
+        }
+        .card {
+          @apply rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow duration-200 hover:shadow-md;
+        }
+        .sidebar {
+          @apply min-h-screen w-64 border-r border-gray-200 bg-gray-50 p-6 shadow-sm;
+        }
+        .container {
+          @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+        }
+      }
+
+      @layer utilities {
+        .text-gradient {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
         }
       }
     </style>
+
     {{ content_for_header }}
   </head>
-  <body class='p-6'>
-    {% comment %}
-      <header role="banner">
-        <div>
-          <h1><a href="/">{{ shop.name }}</a></h1>
-
-          <form action="/search" method="get" role="search">
-            <label for="search-input">Search products</label>
-            <input type="search" id="search-input" name="q" placeholder="Search products..." value="{{ search.terms | escape }}" aria-label="Search products">
-            <button type="submit" aria-label="Submit search">Search</button>
-          </form>
-        </div>
-
-        <nav role="navigation" aria-label="Main navigation">
-          <ul>
-            <li><a href="/" aria-current="page">Home</a></li>
-            <li><a href="/collections">Collections</a></li>
-            <li><a href="/products">Products</a></li>
-            <li><a href="/cart">Cart</a></li>
-          </ul>
-        </nav>
-      </header>
-    {% endcomment %}
-
-    <main role='main' id='main-content'>
+  <body class='min-h-screen bg-gray-50'>
+    <div>
       {{ content_for_layout }}
-    </main>
-
-    <footer role='contentinfo'>
-      <p>
-        &copy; {{ 'now' | date: '%Y' }}
-        {{ shop.name }}. All rights reserved.
-      </p>
-    </footer>
+    </div>
   </body>
 </html>
